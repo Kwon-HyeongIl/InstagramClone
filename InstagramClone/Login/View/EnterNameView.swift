@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct EnterNameView: View {
+    @Environment(SignupViewModel.self) var signupViewModel
+    
     var body: some View {
+        @Bindable var signupViewModel = signupViewModel
+        
         SignupBackgroundView {
             VStack {
                 Text("이름 입력")
@@ -18,7 +22,7 @@ struct EnterNameView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 5)
                 
-                TextField("성명", text: .constant(""))
+                TextField("성명", text: $signupViewModel.name)
                     .modifier(InstagramTextFieldModifier())
                     .padding(.bottom)
                 
@@ -39,4 +43,5 @@ struct EnterNameView: View {
 
 #Preview {
     EnterNameView()
+        .environment(SignupViewModel())
 }

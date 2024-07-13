@@ -9,11 +9,6 @@ import SwiftUI
 
 struct LoginView: View {
     
-    
-    
-    // 255가 Max인 RGB 값을 분수로 넣어도 됨
-//    Color(red: 249/255, green: 238/255, blue: 243/255)
-    
     var body: some View {
         
         NavigationStack { // 페이지들을 단계별로 스택으로 다룸

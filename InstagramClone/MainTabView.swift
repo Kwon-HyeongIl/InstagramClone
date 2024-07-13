@@ -6,10 +6,50 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct MainTabView: View {
+    @State var tabIndex = 0
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView(selection: $tabIndex) { // 탭 인덱스로 탭 각각을 태그
+            Text("Feed")
+                .tabItem {
+                    Image(systemName: "house")
+                }
+                .tag(0)
+            Text("Search")
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                }
+                .tag(1)
+            NewPostView(tabIndex: $tabIndex) // NewPostView와 연결
+                .tabItem {
+                    Image(systemName: "plus.square")
+                }
+                .tag(2)
+            VStack {
+                Text("Reels")
+                
+                Button {
+                    AuthManager.shared.signout()
+                } label: {
+                    Text("로그아웃")
+                }
+            }
+                .tabItem {
+                    Image(systemName: "movieclapper")
+                }
+                .tag(3)
+                
+            Text("Profile")
+                .tabItem {
+                    Image(systemName: "person.circle")
+                }
+                .tag(4)
+        }
+        .tint(Color.black) // 클릭(강조) 되었을 때의 색상 설정
+        
     }
 }
 

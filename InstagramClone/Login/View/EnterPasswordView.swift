@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct EnterPasswordView: View {
+    @Environment(SignupViewModel.self) var signupViewModel
+    
     var body: some View {
+        @Bindable var signupViewModel = signupViewModel
+        
         SignupBackgroundView {
             VStack {
                 Text("비밀번호 만들기")
@@ -24,7 +28,7 @@ struct EnterPasswordView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 10)
                 
-                SecureField("비밀번호", text: .constant(""))
+                SecureField("비밀번호", text: $signupViewModel.password)
                     .modifier(InstagramTextFieldModifier())
                     .padding(.bottom)
                 
@@ -47,4 +51,5 @@ struct EnterPasswordView: View {
 
 #Preview {
     EnterPasswordView()
+        .environment(SignupViewModel())
 }

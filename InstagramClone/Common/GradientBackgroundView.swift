@@ -15,6 +15,9 @@ struct GradientBackgroundView: View {
     let blueColor = Color(red: 0.9333333, green: 0.968627451, blue: 0.9960784314)
     let greenColor = Color(red: 0.937254902, green: 0.9882352941, blue: 0.9529411765)
     
+    // 255가 Max인 RGB 값을 분수로 넣어도 됨
+//    Color(red: 249/255, green: 238/255, blue: 243/255)
+    
     var body: some View {
         LinearGradient(stops: [
             Gradient.Stop(color: yellowColor, location: 0.1),
