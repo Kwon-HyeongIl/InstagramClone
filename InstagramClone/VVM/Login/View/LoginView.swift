@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @State var viewModel = LoginViewModel()
     
     var body: some View {
         
@@ -23,13 +24,16 @@ struct LoginView: View {
                     Spacer()
                     
                     VStack(spacing: 20) { // 이 스택 내에 있는 모든 뷰에 20만큼 공간을 줌
-                        TextField("이메일 주소", text: .constant(""))
+                        TextField("이메일 주소", text: $viewModel.email)
                             .modifier(InstagramTextFieldModifier())
                         
-                        SecureField("비밀번호", text: .constant("")) // 비밀번호용 텍스트 필드
+                        SecureField("비밀번호", text: $viewModel.password) // 비밀번호용 텍스트 필드
                             .modifier(InstagramTextFieldModifier())
                         
                         BlueButtonView {
+                            Task {
+                                await viewModel.login()
+                            }
                             
                         } label: {
                             Text("로그인")
