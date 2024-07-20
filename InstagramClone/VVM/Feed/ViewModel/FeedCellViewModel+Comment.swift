@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+extension FeedCellViewModel {
+    func loadCommentCount() async {
+        self.commentCount = await CommentManager.loadCommentCount(postId: self.post.id)
+    }
+}

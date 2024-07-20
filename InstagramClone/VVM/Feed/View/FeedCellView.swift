@@ -10,6 +10,7 @@ import Kingfisher
 
 struct FeedCellView: View {
     @State var viewModel: FeedCellViewModel
+    @State var isCommentShowing = false // true일 경우 댓글창이 위로 올라옴
     
     init(post: Post) {
         self.viewModel = FeedCellViewModel(post: post)
@@ -51,9 +52,21 @@ struct FeedCellView: View {
             }
             
             HStack {
-                Image(systemName: "heart")
+                let isLike = viewModel.post.isLike ?? false
+                Button {
+                    Task {
+                        isLike ? await viewModel.unlike() : await viewModel.like()
+                    }
+                } label: {
+                    Image(systemName: isLike ? "heart.fill" : "heart")
+                        .foregroundStyle(isLike ? .red : .primary)
+                }
                 
-                Image(systemName: "bubble.right")
+                Button {
+                    isCommentShowing = true
+                } label: {
+                    Image(systemName: "bubble.right")
+                }
                 
                 Image(systemName: "paperplane")
                 Spacer()
@@ -73,11 +86,15 @@ struct FeedCellView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
             
-            Text("댓글 n개 더보기")
-                .foregroundStyle(.gray)
-                .font(.footnote)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 10)
+            Button {
+                isCommentShowing = true
+            } label: {
+                Text("댓글 \(viewModel.commentCount)개 더보기")
+                    .foregroundStyle(.gray)
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 10)
+            }
             
             Text("\(viewModel.post.date.relativeTimeString())")
                 .foregroundStyle(.gray)
@@ -86,6 +103,17 @@ struct FeedCellView: View {
                 .padding(.horizontal, 10)
         }
         .padding(.bottom)
+        .sheet(isPresented: $isCommentShowing, content: { // 화면 밑에서 올라오는 뷰 (isCommentShowing 값은, 뷰를 내리면 이 함수가 자동으로 false로 바꾸므로 바인딩 기호 '$'를 써야함)
+            CommentView(post: viewModel.post)
+                .presentationDragIndicator(.visible)
+        })
+        .onChange(of: isCommentShowing) { oldValue, newValue in // 댓글 추가하고 댓글 개수 새로고침 하기 위한 과정
+            if !newValue {
+                Task {
+                    await viewModel.loadCommentCount()
+                }
+            }
+        }
     }
 }
 

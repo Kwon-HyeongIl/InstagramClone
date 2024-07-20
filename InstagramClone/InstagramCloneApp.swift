@@ -16,7 +16,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
 }
 
-
 @main
 struct InstagramCloneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate

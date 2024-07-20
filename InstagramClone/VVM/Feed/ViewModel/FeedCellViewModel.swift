@@ -10,11 +10,14 @@ import Foundation
 @Observable
 class FeedCellViewModel {
     var post: Post
+    var commentCount = 0
     
     init(post: Post) {
         self.post = post
         Task {
             await loadUserData()
+            await isLike()
+            await loadCommentCount()
         }
     }
     

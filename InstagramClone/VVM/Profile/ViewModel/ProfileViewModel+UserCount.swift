@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+extension ProfileViewModel {
+    func loadUserCountInfo() async {
+        self.user?.userCountInfo = await UserCountManager.loadUserCountInfo(userId: self.user?.id)
+    }
+}

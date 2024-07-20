@@ -19,25 +19,7 @@ class FeedViewModel {
     }
     
     func loadAllPosts() async {
-        do {
-            let documents = try await Firestore.firestore().collection("posts").order(by: "date", descending: true).getDocuments().documents
-            
-            /*
-            var posts: [Post] = []
-            for document in documents {
-                let post = try document.data(as: Post.self)
-                posts.append(post)
-            }
-            self.posts = posts
-            */
-            
-            // 위와 동일한 기능을 하는 코드
-            self.posts = try documents.compactMap({ document in // compactMap은 nil 원소는 패스함
-                return try document.data(as: Post.self)
-            })
-            
-        } catch {
-            print("Failed to load User posts, \(error.localizedDescription)")
-        }
+        guard let posts = await PostManager.loadAllPosts() else { return }
+        self.posts = posts
     }
 }

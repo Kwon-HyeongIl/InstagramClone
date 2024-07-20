@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var signupViewModel = SignupViewModel()
     
     var body: some View {
-        if AuthManager.shared.currentUserSession != nil { // 로그인 한 상태일 경우
+        if AuthManager.shared.currentUser != nil { // 로그인 한 상태일 경우
             MainTabView()
         } else {
             LoginView()

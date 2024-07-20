@@ -13,12 +13,12 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $tabIndex) { // 탭 인덱스로 탭 각각을 태그
-            Text("Feed")
+            FeedView()
                 .tabItem {
                     Image(systemName: "house")
                 }
                 .tag(0)
-            Text("Search")
+            SearchView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                 }
@@ -42,7 +42,7 @@ struct MainTabView: View {
                 }
                 .tag(3)
                 
-            Text("Profile")
+            ProfileView()
                 .tabItem {
                     Image(systemName: "person.circle")
                 }

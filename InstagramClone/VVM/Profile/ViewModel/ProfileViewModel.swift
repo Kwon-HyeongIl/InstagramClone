@@ -24,6 +24,18 @@ class ProfileViewModel {
     
     var posts: [Post] = []
     
+    var postCount: Int? {
+        user?.userCountInfo?.postCount
+    }
+    
+    var followingCount: Int? {
+        user?.userCountInfo?.followingCount
+    }
+    
+    var followerCount: Int? {
+        user?.userCountInfo?.followerCount
+    }
+    
     // 내 프로필 보기
     init() {
         let tempUser = AuthManager.shared.currentUser
@@ -32,6 +44,10 @@ class ProfileViewModel {
         self.name = tempUser?.name ?? "" // "??" nil일 경우 오른쪽 값이 기본값으로 사용
         self.username = tempUser?.username ?? ""
         self.bio = tempUser?.bio ?? ""
+        
+        Task {
+            await loadUserCountInfo()
+        }
     }
     
     // 다른 사람 프로필 보기
@@ -41,7 +57,10 @@ class ProfileViewModel {
         self.username = user.username
         self.bio = user.bio ?? ""
         
-        isFollow()
+        Task {
+            await isFollow()
+            await loadUserCountInfo()
+        }
     }
     
     func convertImage(item: PhotosPickerItem?) async {
@@ -99,18 +118,8 @@ class ProfileViewModel {
     }
     
     func loadUserPosts() async {
-        do {
-            let documents = try await Firestore.firestore().collection("posts").order(by: "date", descending: true).whereField("userId", isEqualTo: user?.id ?? "").getDocuments().documents
-            
-            var posts: [Post] = []
-            for document in documents {
-                let post = try document.data(as: Post.self) // 리턴으로 받은 QueryDocumentSnapshot 타입의 값을 Post 타입의 값으로 변경
-                posts.append(post)
-            }
-            self.posts = posts
-            
-        } catch {
-            print("Failed to load User posts, \(error.localizedDescription)")
-        }
+        guard let userId = user?.id else { return }
+        guard let posts = await PostManager.loadUserPosts(userId: userId) else { return }
+        self.posts = posts
     }
 }

@@ -60,21 +60,21 @@ struct ProfileView: View {
                         }
                         
                         VStack {
-                            Text("124")
+                            Text("\(viewModel.postCount ?? 0)")
                                 .fontWeight(.semibold)
                             Text("게시물")
                         }
                         .frame(maxWidth: .infinity)
                         
                         VStack {
-                            Text("100")
+                            Text("\(viewModel.followerCount ?? 0)")
                                 .fontWeight(.semibold)
                             Text("팔로워")
                         }
                         .frame(maxWidth: .infinity)
                         
                         VStack {
-                            Text("100")
+                            Text("\(viewModel.followingCount ?? 0)")
                                 .fontWeight(.semibold)
                             Text("팔로잉")
                         }
@@ -144,6 +144,9 @@ struct ProfileView: View {
                     Spacer()
                 }
             }
+        }
+        .task {
+            await viewModel.loadUserCountInfo()
         }
         .navigationBarBackButtonHidden()
         .toolbar {
